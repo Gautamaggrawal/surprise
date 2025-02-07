@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Previous head section remains the same -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shubhangee Goel - Classical Dance Artist & Teacher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <style>
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Previous styles remain the same */
+        .hover-rotate {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .hover-rotate:hover {
+            transform: rotate(5deg);
+        }
+
+        .hover-scale {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .slide-up {
+            animation: slideUp 1s ease-out;
+        }
+
+        @keyframes slideUp {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* New styles for achievements */
+        .achievement-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f3f4f6 100%);
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .highlight-badge {
+            background: linear-gradient(45deg, #FF6B6B 0%, #FF8E53 100%);
+        }
+
+        .performance-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(249, 250, 251, 0.9) 100%);
+            backdrop-filter: blur(10px);
+        }
+
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            color: #FF6B6B;
+        }
+
+        .gharana-section {
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(249, 250, 251, 0.9));
+        }
+
+        .carousel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            flex: 0 0 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            position: absolute;
+            width: 100%;
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+            position: relative;
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 1rem;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 10;
+            transition: background 0.3s ease;
+        }
+
+        .carousel-control:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .carousel-prev {
+            left: 1rem;
+        }
+
+        .carousel-next {
+            right: 1rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+    </style>
+</head>
+
+<body class="bg-gray-50">
+
+    <nav class="bg-white shadow-lg fixed w-full z-10">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="text-2xl font-semibold text-gray-800 hover-scale">Shubhangee Goel</div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-600 hover:text-gray-900 hover-scale">Home</a>
+                    <a href="#about" class="text-gray-600 hover:text-gray-900 hover-scale">About</a>
+                    <a href="#achievements" class="text-gray-600 hover:text-gray-900 hover-scale">Achievements</a>
+                    <a href="#news" class="text-gray-600 hover:text-gray-900 hover-scale">News</a>
+                    <a href="#classes" class="text-gray-600 hover:text-gray-900 hover-scale">Classes</a>
+                    <a href="#contact" class="text-gray-600 hover:text-gray-900 hover-scale">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="pt-20">
+        <div class="relative h-screen flex items-center justify-center bg-gray-900 fade-in">
+            <div class="absolute w-full h-full overflow-hidden">
+                <div class="video-container">
+                    <iframe
+                        src="https://www.youtube.com/embed/ZUBeLEGeR1c?autoplay=1&mute=1&loop=1&playlist=ZUBeLEGeR1c"
+                        title="Rang Manch Performance" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen class="opacity-50">
+                    </iframe>
+                </div>
+            </div>
+            <div class="relative text-center text-white slide-up z-10">
+                <h1 class="text-5xl md:text-6xl font-bold mb-4">Shubhangee Goel</h1>
+                <p class="text-xl md:text-2xl mb-2">Kathak Exponent & Teacher</p>
+                <p class="text-lg mb-4">Lucknow Gharana Specialist</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="https://www.linkedin.com/in/shubhangee-goel-b45832171/" target="_blank"
+                        class="social-icon"><i class="fab fa-linkedin text-2xl"></i></a>
+                    <a href="https://www.facebook.com/p/S-H-U-B-H-a-N-G-E-E-100063656513804/" target="_blank"
+                        class="social-icon"><i class="fab fa-facebook text-2xl"></i></a>
+                    <a href="https://www.youtube.com/@shubhangeegoel3614" target="_blank" class="social-icon"><i
+                            class="fab fa-youtube text-2xl"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-4" data-aos="fade-up">Featured Performances</h2>
+            <p class="text-center text-gray-600 mb-12" data-aos="fade-up">Showcasing the artistry of Lucknow Gharana
+                Kathak</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Rang Manch Performance -->
+                <div class="performance-card rounded-lg shadow-lg overflow-hidden" data-aos="fade-right">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/ZUBeLEGeR1c" title="Rang Manch Performance"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">Rang Manch</h3>
+                        <p class="text-gray-600 mb-4">An exquisite Tarana presentation showcasing the intricate footwork
+                            and expressive movements of Lucknow Gharana.</p>
+                        <a href="https://www.youtube.com/watch?v=ZUBeLEGeR1c" target="_blank"
+                            class="inline-flex items-center text-blue-500 hover:text-blue-700">
+                            <span>Watch on YouTube</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Facebook Performance -->
+                <div class="performance-card rounded-lg shadow-lg overflow-hidden" data-aos="fade-left">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/t1Ov7DysiRo" title="Classical Performance"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">Classical Kathak Presentation</h3>
+                        <p class="text-gray-600 mb-4">A mesmerizing showcase of traditional Kathak repertoire,
+                            demonstrating the grace and precision of classical dance.</p>
+                        <a href="https://www.facebook.com/watch/?v=985512715322295" target="_blank"
+                            class="inline-flex items-center text-blue-500 hover:text-blue-700">
+                            <span>Watch on Facebook</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-4" data-aos="fade-up">Performance Gallery</h2>
+            <p class="text-center text-gray-600 mb-12" data-aos="fade-up">Journey through moments of artistic expression
+            </p>
+
+            <!-- Featured Carousel -->
+            <div class="carousel mb-12" data-aos="fade-up">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="assets/gallery/1.jpg" alt="Performance 1" class="w-full h-96 object-cover rounded-lg">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="assets/gallery/2.jpg" alt="Performance 2" class="w-full h-96 object-cover rounded-lg">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="assets/gallery/3.jpg" alt="Performance 3" class="w-full h-96 object-cover rounded-lg">
+                    </div>
+                </div>
+                <button class="carousel-control carousel-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-control carousel-next">
+                    <i class="carousel-next fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Photo Gallery Grid -->
+            <div class="gallery-grid" data-aos="fade-up">
+                <div class="gallery-item">
+                    <img src="assets/gallery/4.jpg" alt="Gallery 1" class="w-full h-64 object-cover rounded-lg">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/gallery/5.jpg" alt="Gallery 2" class="w-full h-64 object-cover rounded-lg">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/gallery/6.jpg" alt="Gallery 3" class="w-full h-64 object-cover rounded-lg">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/gallery/7.jpg" alt="Gallery 4" class="w-full h-64 object-cover rounded-lg">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/gallery/8.jpg" alt="Gallery 5" class="w-full h-64 object-cover rounded-lg">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/gallery/11.jpg" alt="Gallery 6" class="w-full h-84 object-cover rounded-lg">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/gallery/9.jpg" alt="Gallery 6" class="w-full h-84 object-cover rounded-lg">
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/gallery/10.jpg" alt="Gallery 6" class="w-full h-84 object-cover rounded-lg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for full-size image view -->
+        <div class="modal">
+            <img src="" alt="Full size image" class="max-w-full max-h-90vh">
+        </div>
+    </section>
+
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">About Me</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right">
+                    <img src="assets/gallery/award.avif" alt="Shubhangee Goel"
+                        class="rounded-lg shadow-lg hover-rotate">
+                </div>
+                <div data-aos="fade-left">
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        Shubhangee Goel is a distinguished Kathak exponent, teacher, and performer, specializing in the
+                        prestigious Lucknow Gharana style. Her dedication to the classical arts has earned her numerous
+                        accolades, including the National Balshree Award and the IAYP award by the Duke of Edinburgh.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed">
+                        Her performances masterfully showcase the intricate dancing techniques of Lucknow Gharana in
+                        Kathak, particularly through her mesmerizing Tarana presentations. As a dedicated teacher, she
+                        continues to pass on these rich traditions to the next generation of dancers.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Lucknow Gharana Expertise</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white p-8 rounded-lg shadow-lg" data-aos="fade-right">
+                <h3 class="text-2xl font-semibold mb-4">Tarana Performances</h3>
+                <p class="text-gray-700 mb-4">
+                    Specializing in the elegant and graceful Lucknow Gharana style, Shubhangee's Tarana performances
+                    exemplify the sophisticated techniques and artistic nuances of this classical tradition.
+                </p>
+                <div class="mt-6">
+                    <h4 class="font-semibold mb-2">Featured Performance: Rang Manch</h4>
+                    <div class="bg-gray-100 p-4 rounded">
+                        <p class="text-gray-700">A spectacular showcase of Kathak dance traditions, demonstrating the
+                            intricate footwork and expressive movements characteristic of Lucknow Gharana.</p>
+                        <a href="https://www.youtube.com/watch?v=ZUBeLEGeR1c" target="_blank"
+                            class="text-blue-500 hover:text-blue-700 mt-2 inline-block">Watch Performance →</a>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-lg shadow-lg" data-aos="fade-left">
+                <h3 class="text-2xl font-semibold mb-4">Teaching Philosophy</h3>
+                <p class="text-gray-700 mb-4">
+                    Through dedicated instruction, Shubhangee preserves and propagates the rich heritage of Lucknow
+                    Gharana, ensuring its timeless traditions continue to flourish in the modern era.
+                </p>
+                <ul class="space-y-3">
+                    <li class="flex items-center">
+                        <i class="fas fa-circle text-xs text-gray-400 mr-2"></i>
+                        <span>Classical technique preservation</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-circle text-xs text-gray-400 mr-2"></i>
+                        <span>Traditional repertoire development</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-circle text-xs text-gray-400 mr-2"></i>
+                        <span>Artistic expression cultivation</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </section>
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Featured In</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Shiv Nadar University Feature -->
+                <div class="performance-card p-6 rounded-lg shadow-lg" data-aos="fade-right">
+                    <!-- <img src="/api/placeholder/400/300" alt="Shiv Nadar University Feature" class="w-full h-48 object-cover rounded mb-4"> -->
+                    <h3 class="text-xl font-semibold mb-2 text-center">Shiv Nadar University</h3>
+                    <p class="text-gray-600 mb-4 text-center">Featured performer and cultural ambassador</p>
+                    <div class="bg-white rounded-lg shadow-lg p-6" data-aos="fade-up">
+                        <blockquote class="instagram-media" data-instgrm-captioned
+                            data-instgrm-permalink="https://www.instagram.com/p/CRTZf7ig0dv/?utm_source=ig_embed&amp;utm_campaign=loading"
+                            data-instgrm-version="14"
+                            style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                        </blockquote>
+                        <script async src="//www.instagram.com/embed.js"></script>
+
+                        <!-- <h3 class="text-xl font-bold mt-4 mb-2">Shiv Nadar University</h3>
+                        <p class="text-gray-600">Featured performer and cultural ambassador, showcasing classical dance
+                            traditions to academic audiences.</p> -->
+                        <a href="https://www.instagram.com/shivnadaruniv/p/CRTZf7ig0dv/" target="_blank"
+                            class="text-blue-500 hover:text-blue-700 mt-4 inline-block">View Feature →</a>
+                    </div>
+                    <!-- <a href="https://www.instagram.com/shivnadaruniv/" target="_blank" class="text-blue-500 hover:text-blue-700">View Feature →</a> -->
+                </div>
+
+                <!-- Facebook Performance Highlight -->
+                <div class="performance-card p-6 rounded-lg shadow-lg" data-aos="fade-left">
+
+                    <h3 class="text-xl font-semibold mb-2 text-center">Special Performance</h3>
+                    <p class="text-gray-600 mb-4 text-center">Classical Kathak presentation showcasing traditional
+                        repertoire</p>
+                    <div class="bg-white rounded-lg shadow-lg p-6" data-aos="fade-up">
+                        <img src="assets/gallery/fb.jpg" alt="Facebook Performance" class="w-full h-110  rounded mb-4">
+                        <br>
+                        <img src="assets/gallery/fb2.png" alt="Facebook Performance"
+                            class="w-full h-55 object-cover rounded mb-4 mt-4">
+                        <a href="https://www.facebook.com/watch/?v=985512715322295" target="_blank"
+                            class="text-blue-500 hover:text-blue-700">Watch Performance →</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="achievements" class="py-20 bg-gradient-to-b from-gray-50 to-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-4" data-aos="fade-up">Awards & Recognition</h2>
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <!-- National Balshree Award -->
+                <div class="achievement-card p-8 rounded-xl shadow-lg" data-aos="fade-up">
+                    <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-medal text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-2">National Balshree Award</h3>
+                    <p class="text-gray-600 text-center">National recognition for exceptional talent in classical dance
+                    </p>
+                </div>
+
+                <!-- IAYP Award -->
+                <div class="achievement-card p-8 rounded-xl shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-trophy text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-2">IAYP Award</h3>
+                    <p class="text-gray-600 text-center">Duke of Edinburgh's International Award</p>
+                </div>
+
+                <!-- Graded Artist -->
+                <div class="achievement-card p-8 rounded-xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-tv text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-2">Graded Artist</h3>
+                    <p class="text-gray-600 text-center">Doordarshan Kendra, New Delhi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Achievements Section -->
+    <section id="achievements" class="py-20 bg-gradient-to-b from-gray-50 to-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-4" data-aos="fade-up">Professional Achievements</h2>
+            <p class="text-center text-gray-600 mb-12" data-aos="fade-up" data-aos-delay="100">Recognized Excellence in
+                Classical Dance</p>
+
+            <!-- Major Achievements -->
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <!-- Doordarshan Recognition -->
+                <div class="achievement-card p-8 rounded-xl shadow-lg" data-aos="fade-right">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-tv text-3xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">Graded Artist</h3>
+                            <p class="text-gray-600">Doordarshan Kendra, New Delhi</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">Recognized as a graded artist by India's national broadcaster,
+                        demonstrating exceptional skill and artistry in Kathak dance.</p>
+                    <div class="mt-4">
+                        <span class="highlight-badge text-white px-4 py-1 rounded-full text-sm">National
+                            Recognition</span>
+                    </div>
+                </div>
+
+                <!-- President's Award -->
+                <div class="achievement-card p-8 rounded-xl shadow-lg" data-aos="fade-left">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-award text-3xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">President's Award</h3>
+                            <p class="text-gray-600">Excellence in Classical Arts</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">Honored with the prestigious President's Award for outstanding
+                        contributions to Kathak dance and cultural preservation.</p>
+                    <div class="mt-4">
+                        <span class="highlight-badge text-white px-4 py-1 rounded-full text-sm">Highest Honor</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Achievements Timeline -->
+            <div class="relative mt-20" data-aos="fade-up">
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-200"></div>
+                <div class="space-y-12">
+                    <div class="relative">
+                        <div class="absolute left-1/2 transform -translate-x-1/2 -mt-3">
+                            <div class="w-6 h-6 bg-blue-500 rounded-full"></div>
+                        </div>
+                        <div class="ml-8 md:ml-0 md:max-w-md md:mx-auto bg-white p-6 rounded-lg shadow-md">
+                            <h4 class="text-xl font-semibold mb-2">Teaching Excellence</h4>
+                            <p class="text-gray-600">Mentored numerous students in classical Kathak dance, preserving
+                                cultural heritage</p>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute left-1/2 transform -translate-x-1/2 -mt-3">
+                            <div class="w-6 h-6 bg-purple-500 rounded-full"></div>
+                        </div>
+                        <div class="ml-8 md:ml-0 md:max-w-md md:mx-auto bg-white p-6 rounded-lg shadow-md">
+                            <h4 class="text-xl font-semibold mb-2">Performance Milestones</h4>
+                            <p class="text-gray-600">Featured performer at prestigious national dance festivals and
+                                cultural events</p>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute left-1/2 transform -translate-x-1/2 -mt-3">
+                            <div class="w-6 h-6 bg-green-500 rounded-full"></div>
+                        </div>
+                        <div class="ml-8 md:ml-0 md:max-w-md md:mx-auto bg-white p-6 rounded-lg shadow-md">
+                            <h4 class="text-xl font-semibold mb-2">Cultural Ambassador</h4>
+                            <p class="text-gray-600">Representing Rajasthan's rich cultural heritage through classical
+                                dance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="news" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">In The News</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <a
+                    href="https://www.abplive.com/states/rajasthan/rajasthan-baran-news-shubhangi-goyal-got-president-award-for-kathak-dance-arts-ann-2231915">
+                    <div class="bg-gray-50 p-8 rounded-lg hover-scale" data-aos="fade-right">
+                        <div class="flex items-start space-x-4">
+                            <img src="assets/gallery/abpl.png" alt="ABP News" class="w-24 h-34 object-cover rounded">
+                            <div>
+                                <h3 class="text-xl font-semibold mb-2">ABP News Feature</h3>
+                                <p class="text-gray-600 mb-2">Shubhangee Goel receives prestigious President's Award for
+                                    contributions to Kathak dance arts</p>
+                                <p class="text-sm text-gray-500">Featured in ABP News Rajasthan</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <div class="bg-gray-50 p-8 rounded-lg hover-scale" data-aos="fade-left">
+                    <div class="flex items-start">
+                        <img src="assets/gallery/abp1.png" alt="Cultural News" class="w-144 h-34 object-cover rounded">
+                        <!-- <div>
+                            <h3 class="text-xl font-semibold mb-2">Cultural Achievement</h3>
+                            <p class="text-gray-600 mb-2">Representing Baran's cultural heritage through classical dance
+                            </p>
+                            <p class="text-sm text-gray-500">Regional Arts Coverage</p>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Classes Section -->
+    <section id="classes" class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Dance Classes</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-lg hover-scale" data-aos="zoom-in-right">
+                    <h3 class="text-2xl font-semibold mb-4">Beginner Classes</h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Introduction to Kathak basics</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Footwork and rhythmic patterns</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Traditional compositions</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-lg hover-scale" data-aos="zoom-in-left">
+                    <h3 class="text-2xl font-semibold mb-4">Advanced Training</h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Complex choreographies</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Performance techniques</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Classical repertoire</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-4" data-aos="fade-up">Connect & Follow</h2>
+            <p class="text-center text-gray-600 mb-12" data-aos="fade-up">Stay updated with latest performances and
+                events</p>
+
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- LinkedIn -->
+                <a href="https://www.linkedin.com/in/shubhangee-goel-b45832171/" target="_blank"
+                    class="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-all duration-300"
+                    data-aos="fade-up">
+                    <i class="fab fa-linkedin text-4xl text-blue-500 mb-4"></i>
+                    <h3 class="font-semibold">LinkedIn</h3>
+                    <p class="text-gray-600 text-sm">Professional Updates</p>
+                </a>
+
+                <!-- Facebook -->
+                <a href="https://www.facebook.com/p/S-H-U-B-H-a-N-G-E-E-100063656513804/" target="_blank"
+                    class="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-all duration-300"
+                    data-aos="fade-up">
+                    <i class="fab fa-facebook text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="font-semibold">Facebook</h3>
+                    <p class="text-gray-600 text-sm">Performance Updates</p>
+                </a>
+
+                <!-- YouTube -->
+                <a href="https://www.youtube.com/@shubhangeegoel3614" target="_blank"
+                    class="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-all duration-300"
+                    data-aos="fade-up">
+                    <i class="fab fa-youtube text-4xl text-red-600 mb-4"></i>
+                    <h3 class="font-semibold">YouTube</h3>
+                    <p class="text-gray-600 text-sm">Dance Videos</p>
+                </a>
+
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/the_happyelement/" target="_blank"
+                    class="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-all duration-300"
+                    data-aos="fade-up">
+                    <i class="fab fa-instagram text-4xl text-pink-600 mb-4"></i>
+                    <h3 class="font-semibold">Instagram</h3>
+                    <p class="text-gray-600 text-sm">Behind the Scenes</p>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section id="contact" class="py-20 bg-gray-900 text-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Contact</h2>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div data-aos="fade-right">
+                    <h3 class="text-xl font-semibold mb-4">Get in Touch</h3>
+                    <p class="mb-6">For inquiries about classes, performances, or collaborations, please reach out:</p>
+                    <div class="space-y-4">
+                        <p class="hover-scale"><i class="fas fa-envelope mr-2"></i>Email: contact@shubhangeegoel.com</p>
+                        <p class="hover-scale"><i class="fas fa-phone mr-2"></i>Phone: +91 XXXXXXXXXX</p>
+                        <p class="hover-scale"><i class="fas fa-map-marker-alt mr-2"></i>Location: Baran, Rajasthan,
+                            India</p>
+                    </div>
+                </div>
+                <div class="flex space-x-6 justify-center items-center" data-aos="fade-left">
+                    <a href="#" class="text-white hover:text-gray-300 hover-scale"><i
+                            class="fab fa-facebook text-3xl"></i></a>
+                    <a href="#" class="text-white hover:text-gray-300 hover-scale"><i
+                            class="fab fa-instagram text-3xl"></i></a>
+                    <a href="#" class="text-white hover:text-gray-300 hover-scale"><i
+                            class="fab fa-youtube text-3xl"></i></a>
+                    <a href="#" class="text-white hover:text-gray-300 hover-scale"><i
+                            class="fab fa-linkedin text-3xl"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p>&copy; 2025 Shubhangee Goel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script async src="//www.instagram.com/embed.js"></script>
+
+    <script>
+        AOS.init({
+            duration: 500,
+            once: true,
+            offset: 100
+        });
+    </script>
+    <script>
+        // Smooth scroll for sections
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener("click", function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute("href")).scrollIntoView({
+                    behavior: "smooth"
+                });
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carousel functionality
+            const carousel = document.querySelector('.carousel');
+            const items = carousel.querySelectorAll('.carousel-item');
+            let currentIndex = 0;
+
+            function showSlide(index) {
+                items.forEach(item => item.classList.remove('active'));
+                currentIndex = (index + items.length) % items.length;
+                items[currentIndex].classList.add('active');
+            }
+            carousel.querySelector('.carousel-next').addEventListener('click', () => {
+                showSlide(currentIndex + 1);
+            });
+            carousel.querySelector('.carousel-prev').addEventListener('click', () => {
+                showSlide(currentIndex - 1);
+            });
+            // Auto advance slides
+            setInterval(() => {
+                showSlide(currentIndex + 1);
+            }, 5000);
+            // Gallery modal functionality
+            const modal = document.querySelector('.modal');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            galleryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const imgSrc = item.querySelector('img').src;
+                    modal.querySelector('img').src = imgSrc;
+                    modal.classList.add('active');
+                });
+            });
+            modal.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

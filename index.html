@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rose Day Quiz</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+    }
+
+    #roseCanvas, #envelopeCanvas {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #envelopeCanvas {
+      display: none;
+    }
+
+
+    .quiz-overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .quiz-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .question {
+      font-size: 1.2em;
+      color: #e31837;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      padding: 10px 20px;
+      border: 2px solid #e31837;
+      background: white;
+      color: #e31837;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1em;
+    }
+
+    .option-btn:hover {
+      background: #e31837;
+      color: white;
+    }
+
+    .instruction {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 1.2em;
+      color: #e31837;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 1em;
+      color: #e31837;
+    }
+    .hint-text {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 1em;
+      color: #e31837;
+    }
+    #envelopeCanvas {
+      display: none;
+    }
+
+    .message-overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      display: none;
+      z-index: 1000;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .message-text {
+      font-size: 1.5em;
+      color: #e31837;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+    <canvas id="roseCanvas"></canvas>
+    <canvas id="envelopeCanvas"></canvas>
+    <div id="quizOverlay" class="quiz-overlay">
+      <div class="question" id="questionText"></div>
+      <div class="options" id="optionsContainer"></div>
+    </div>
+    <div class="message-overlay" id="messageOverlay">
+      <div class="message-text">Happy Rose Day, Shubhuuu! 🌹
+        You are the most beautiful rhythm in my life, just like Kathak is to the universe. I am so proud of you, and I cherish every moment with you.
+        
+        May your dance always be as graceful as your heart. ❤️
+        
+         ❤️</div>
+    </div>
+    <div class="instruction">Click the rose petals to answer questions ❤️</div>
+    <div class="progress" id="progress">Questions: 0/5</div>
+    <div class="hint-text">Find the glowing petals!</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const questions = [
+        {
+          question: "What's your favorite memory of us?",
+          options: ["Our first date", "Our first kiss", "New Year Party",],
+          correctIndex: null // Any answer is valid
+        },
+        {
+          question: "Where would you like to go on our next date?",
+          options: ["Cozy dinner", "Adventure park", "Movie night"],
+          correctIndex: null
+        },
+        {
+          question: "What makes you smile the most about us?",
+          options: ["Our inside jokes", "The way we care", "Our adventures", "The little moments"],
+          correctIndex: null
+        },
+        {
+          question: "Complete the sentence: You make me feel...",
+          options: ["Special", "Happy", "Loved", "Complete"],
+          correctIndex: null
+        },
+        {
+          question: "What's your wish for our future?",
+          options: ["Growing together", "Adventures ahead", "Forever love", "All of the above"],
+          correctIndex: null
+        }
+      ];
+
+      let answeredQuestions = 0;
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({
+        canvas: document.getElementById("roseCanvas"),
+        antialias: true
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const rose = new THREE.Group();
+      const petals = [];
+      let selectedPetal = null;
+
+      // Create petal geometry
+      function createPetalGeometry() {
+        const shape = new THREE.Shape();
+        shape.moveTo(0, 0);
+        shape.quadraticCurveTo(1, 1, 0, 2);
+        shape.quadraticCurveTo(-1, 1, 0, 0);
+        
+        return new THREE.ExtrudeGeometry(shape, {
+          depth: 0.1,
+          bevelEnabled: true,
+          bevelThickness: 0.05,
+          bevelSize: 0.05,
+          bevelSegments: 3
+        });
+      }
+
+      // Create rose with exactly 5 petals
+      function createRose() {
+        const petalGeometry = createPetalGeometry();
+        
+        // Material for interactive petals (slightly glowing)
+        const interactivePetalMaterial = new THREE.MeshPhongMaterial({
+          color: 0xe31837,
+          shininess: 100,
+          specular: 0xff6b6b,
+          emissive: 0x440000,
+          side: THREE.DoubleSide
+        });
+
+        // Material for decorative petals
+        const decorativePetalMaterial = new THREE.MeshPhongMaterial({
+          color: 0xe31837,
+          shininess: 50,
+          specular: 0x331111,
+          side: THREE.DoubleSide
+        });
+
+        // Create center of the rose
+        const centerGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+        const centerMaterial = new THREE.MeshPhongMaterial({
+          color: 0x8b0000,
+          shininess: 30
+        });
+        const center = new THREE.Mesh(centerGeometry, centerMaterial);
+        rose.add(center);
+
+        // Create decorative layers
+        const layers = 4; // Number of layers
+        const petalsPerLayer = 8; // Petals in each layer
+        
+        // Add decorative petals
+        for (let layer = 0; layer < layers; layer++) {
+          for (let i = 0; i < petalsPerLayer; i++) {
+            const petal = new THREE.Mesh(petalGeometry, decorativePetalMaterial.clone());
+            const scale = 0.2 + (layer * 0.1);
+            petal.scale.set(scale, scale, scale);
+
+            const angle = (i / petalsPerLayer) * Math.PI * 2;
+            const radius = 0.3 + (layer * 0.2);
+            const heightOffset = layer * 0.15;
+            
+            petal.position.set(
+              Math.cos(angle) * radius,
+              heightOffset,
+              Math.sin(angle) * radius
+            );
+            
+            petal.rotation.set(
+              Math.PI / 4 + (layer * 0.1),
+              angle,
+              Math.PI / 2
+            );
+
+            rose.add(petal);
+          }
+        }
+
+        // Add the 5 interactive petals in strategic positions
+        const interactivePetalPositions = [
+          { layer: 1, angle: 0 },
+          { layer: 1, angle: 2.5 },
+          { layer: 2, angle: 1.2 },
+          { layer: 2, angle: 4 },
+          { layer: 1, angle: 5 }
+        ];
+
+        interactivePetalPositions.forEach((pos, index) => {
+          const petal = new THREE.Mesh(petalGeometry, interactivePetalMaterial.clone());
+          const scale = 0.25 + (pos.layer * 0.1);
+          petal.scale.set(scale, scale, scale);
+
+          const radius = 0.4 + (pos.layer * 0.2);
+          const heightOffset = pos.layer * 0.2;
+
+          petal.position.set(
+            Math.cos(pos.angle) * radius,
+            heightOffset,
+            Math.sin(pos.angle) * radius
+          );
+
+          petal.rotation.set(
+            Math.PI / 4 + (pos.layer * 0.1),
+            pos.angle,
+            Math.PI / 2
+          );
+
+          petal.userData.questionIndex = index;
+          petal.userData.answered = false;
+          petal.userData.isInteractive = true;
+          petals.push(petal);
+          rose.add(petal);
+
+          // Add subtle animation to highlight interactive petals
+          const initialY = petal.position.y;
+          const initialEmissive = petal.material.emissive.getHex();
+          
+          setInterval(() => {
+            petal.position.y = initialY + Math.sin(Date.now() * 0.003) * 0.03;
+            petal.material.emissive.setHex(
+              initialEmissive + Math.floor(Math.sin(Date.now() * 0.003) * 0x110000)
+            );
+          }, 16);
+        });
+
+        // Add stem
+        const stemGeometry = new THREE.CylinderGeometry(0.05, 0.05, 2, 8);
+        const stemMaterial = new THREE.MeshPhongMaterial({
+          color: 0x228B22,
+          shininess: 30
+        });
+        const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+        stem.position.y = -1;
+        rose.add(stem);
+
+        // Add leaves
+        function createLeaf() {
+          const leafShape = new THREE.Shape();
+          leafShape.moveTo(0, 0);
+          leafShape.quadraticCurveTo(0.3, 0.2, 0, 0.8);
+          leafShape.quadraticCurveTo(-0.3, 0.2, 0, 0);
+
+          const leafGeometry = new THREE.ExtrudeGeometry(leafShape, {
+            depth: 0.05,
+            bevelEnabled: true,
+            bevelThickness: 0.02,
+            bevelSize: 0.02,
+            bevelSegments: 2
+          });
+
+          const leafMaterial = new THREE.MeshPhongMaterial({
+            color: 0x228B22,
+            shininess: 30,
+            side: THREE.DoubleSide
+          });
+
+          return new THREE.Mesh(leafGeometry, leafMaterial);
+        }
+
+        // Add two leaves
+        const leaf1 = createLeaf();
+        leaf1.position.set(0.2, -0.5, 0);
+        leaf1.rotation.set(Math.PI / 4, 0, Math.PI / 6);
+        rose.add(leaf1);
+
+        const leaf2 = createLeaf();
+        leaf2.position.set(-0.2, -0.8, 0);
+        leaf2.rotation.set(Math.PI / 4, 0, -Math.PI / 6);
+        rose.add(leaf2);
+
+        scene.add(rose);
+      }
+
+      // Modify the click handler to only respond to interactive petals
+      renderer.domElement.addEventListener('click', (event) => {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(petals);
+
+        if (intersects.length > 0) {
+          const petal = intersects[0].object;
+          if (petal.userData.isInteractive && !petal.userData.answered) {
+            selectedPetal = petal;
+            showQuestion(petal.userData.questionIndex);
+          }
+        }
+      });
+
+      // Add hover effect
+      renderer.domElement.addEventListener('mousemove', (event) => {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(petals);
+
+        petals.forEach(petal => {
+          if (petal.userData.isInteractive && !petal.userData.answered) {
+            petal.material.emissive.setHex(0x440000);
+          }
+        });
+
+        if (intersects.length > 0) {
+          const petal = intersects[0].object;
+          if (petal.userData.isInteractive && !petal.userData.answered) {
+            petal.material.emissive.setHex(0x880000);
+          }
+        }
+      });
+      function setupLighting() {
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        mainLight.position.set(5, 5, 5);
+        scene.add(mainLight);
+
+        const backLight = new THREE.DirectionalLight(0xffffff, 0.3);
+        backLight.position.set(-5, 5, -5);
+        scene.add(backLight);
+      }
+
+      function showQuestion(questionIndex) {
+        const overlay = document.getElementById('quizOverlay');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        
+        questionText.textContent = questions[questionIndex].question;
+        optionsContainer.innerHTML = '';
+        
+        questions[questionIndex].options.forEach((option, index) => {
+          const button = document.createElement('button');
+          button.className = 'option-btn';
+          button.textContent = option;
+          button.onclick = () => handleAnswer(questionIndex, index);
+          optionsContainer.appendChild(button);
+        });
+        
+        overlay.classList.add('active');
+      }
+
+      function createEnvelopeScene() {
+      const envelopeScene = new THREE.Scene();
+      const envelopeCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const envelopeRenderer = new THREE.WebGLRenderer({
+        canvas: document.getElementById("envelopeCanvas"),
+        antialias: true
+      });
+      envelopeRenderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Create envelope
+      const envelope = new THREE.Group();
+      
+      // Base of envelope
+      const baseGeometry = new THREE.PlaneGeometry(2, 1.5);
+      const material = new THREE.MeshPhongMaterial({
+        color: 0xff9999,
+        side: THREE.DoubleSide
+      });
+      const base = new THREE.Mesh(baseGeometry, material);
+      envelope.add(base);
+
+      // Flaps
+      const flapGeometry = new THREE.PlaneGeometry(2, 0.75);
+      const bottomFlap = new THREE.Mesh(flapGeometry, material.clone());
+      bottomFlap.position.y = -0.75;
+      bottomFlap.rotation.x = Math.PI / 4;
+      envelope.add(bottomFlap);
+
+      const topFlap = new THREE.Mesh(flapGeometry, material.clone());
+      topFlap.position.y = 0.75;
+      topFlap.rotation.x = -Math.PI / 4;
+      envelope.add(topFlap);
+
+      // Add heart decoration
+      const heartShape = new THREE.Shape();
+      const x = 0, y = 0;
+      heartShape.moveTo(x, y);
+      heartShape.bezierCurveTo(x + 0.25, y + 0.25, x + 0.4, y, x, y - 0.3);
+      heartShape.bezierCurveTo(x - 0.4, y, x - 0.25, y + 0.25, x, y);
+      
+      const heartGeometry = new THREE.ShapeGeometry(heartShape);
+      const heartMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+      const heart = new THREE.Mesh(heartGeometry, heartMaterial);
+      heart.scale.set(0.3, 0.3, 0.3);
+      heart.position.set(0, 0, 0.01);
+      envelope.add(heart);
+
+      envelopeScene.add(envelope);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      envelopeScene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(5, 5, 5);
+      envelopeScene.add(directionalLight);
+
+      envelopeCamera.position.z = 5;
+
+      return {
+        scene: envelopeScene,
+        camera: envelopeCamera,
+        renderer: envelopeRenderer,
+        envelope: envelope
+      };
+    }
+
+    function showEnvelopeAnimation() {
+      document.getElementById('roseCanvas').style.display = 'none';
+      document.getElementById('envelopeCanvas').style.display = 'block';
+      
+      const envelopeSetup = createEnvelopeScene();
+      const messageOverlay = document.getElementById('messageOverlay');
+
+      let animationFrame = 0;
+      function animateEnvelope() {
+        animationFrame++;
+        
+        envelopeSetup.envelope.rotation.y = Math.sin(animationFrame * 0.02) * 0.2;
+        envelopeSetup.envelope.position.y = Math.sin(animationFrame * 0.03) * 0.1;
+        
+        if (animationFrame === 60) { // Show message after 2 seconds
+          messageOverlay.style.display = 'block';
+        }
+        
+        if (animationFrame < 580) { // Animate for 6 seconds
+          envelopeSetup.renderer.render(envelopeSetup.scene, envelopeSetup.camera);
+          requestAnimationFrame(animateEnvelope);
+        } else {
+          window.location.href = 'portfolio.html';
+        }
+      }
+
+      animateEnvelope();
+    }
+
+    function handleAnswer(questionIndex, optionIndex) {
+      const overlay = document.getElementById('quizOverlay');
+      overlay.classList.remove('active');
+      
+      if (selectedPetal && !selectedPetal.userData.answered) {
+        selectedPetal.material.color.setHex(0x4CAF50);
+        selectedPetal.userData.answered = true;
+        answeredQuestions++;
+        
+        document.getElementById('progress').textContent = `Questions: ${answeredQuestions}/5`;
+        
+        if (answeredQuestions === 5) {
+          setTimeout(showEnvelopeAnimation, 1000);
+        }
+      }
+    }
+
+
+
+      function animate() {
+        requestAnimationFrame(animate);
+        rose.rotation.y += 0.005;
+        renderer.render(scene, camera);
+      }
+
+      // Initialize
+      createRose();
+      setupLighting();
+      
+      camera.position.z = 5;
+      camera.position.y = 1;
+      camera.lookAt(0, 0, 0);
+
+      // Raycaster for petal selection
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      renderer.domElement.addEventListener('click', (event) => {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(petals);
+
+        if (intersects.length > 0) {
+          const petal = intersects[0].object;
+          if (!petal.userData.answered) {
+            selectedPetal = petal;
+            showQuestion(petal.userData.questionIndex);
+          }
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      animate();
+    });
+  </script>
+</body>
+</html>

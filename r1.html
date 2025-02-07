@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Kathak Queen ❤️</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap');
+
+        body {
+            margin: 0;
+            background-color: #0b032d;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            color: white;
+        }
+
+        h1 {
+            font-size: 38px;
+            opacity: 0;
+        }
+
+        #message {
+            font-size: 26px;
+            opacity: 0;
+            margin-top: 20px;
+        }
+
+        #canvas-container {
+            width: 200px;
+            height: 200px;
+        }
+
+        #loveLetter {
+            font-size: 24px;
+            opacity: 0;
+            background: url("https://i.imgur.com/U6WeR3u_d.webp"); /* Scroll paper texture */
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px gold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="message">For My Beautiful Kathak Dancer... 🌹</h1>
+    <div id="canvas-container"></div>
+
+    <p id="loveLetter">
+        "Our love is like Kathak - <br>  
+        full of grace, rhythm, and timeless beauty. <br>  
+        Every heartbeat is a tabla beat, and every step a perfect movement. <br>  
+        You are my dance, my melody, my everything. 💖"
+    </p>
+
+    <script>
+        // Background Music (Tabla + Ghungroo)
+        var backgroundMusic = new Howl({
+            src: ["https://www.fesliyanstudios.com/play-mp3/6301"], // Replace with a Kathak instrumental link
+            autoplay: false,
+            loop: true,
+            volume: 0.5
+        });
+
+        // Ghungroo Sound on Tap
+        var ghungrooSound = new Howl({
+            src: ["https://www.fesliyanstudios.com/play-mp3/4385"], // Replace with an actual ghungroo sound
+            volume: 0.6
+        });
+
+        document.body.addEventListener("click", function () {
+            backgroundMusic.play();
+        });
+
+        // GSAP Animations
+        gsap.to("#message", { 
+            opacity: 1, 
+            y: -30, 
+            duration: 2, 
+            delay: 1,
+            ease: "power2.inOut"
+        });
+
+        // 3D Rose Animation with Three.js
+        let scene = new THREE.Scene();
+        let camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        let renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(200, 200);
+        document.getElementById("canvas-container").appendChild(renderer.domElement);
+
+        let geometry = new THREE.SphereGeometry(1, 32, 32);
+        let material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/9sBaFcJ.jpeg") });
+        let rose = new THREE.Mesh(geometry, material);
+        scene.add(rose);
+
+        camera.position.z = 3;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            rose.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Love Letter Reveal on Tap
+        document.getElementById("canvas-container").addEventListener("click", function () {
+            ghungrooSound.play();
+            gsap.to("#loveLetter", { opacity: 1, duration: 2, display: "block" });
+            createGoldenTrail();
+        });
+
+        // Golden Sparkle Trail
+        function createGoldenTrail() {
+            setInterval(() => {
+                let spark = document.createElement("div");
+                spark.innerHTML = "✨";
+                spark.style.position = "absolute";
+                spark.style.fontSize = Math.random() * 20 + 20 + "px";
+                spark.style.color = "gold";
+                spark.style.left = Math.random() * window.innerWidth + "px";
+                spark.style.top = window.innerHeight + "px";
+                document.body.appendChild(spark);
+
+                gsap.to(spark, { 
+                    y: -100, 
+                    opacity: 0, 
+                    duration: Math.random() * 3 + 2, 
+                    onComplete: () => spark.remove()
+                });
+            }, 200);
+        }
+    </script>
+
+</body>
+</html>

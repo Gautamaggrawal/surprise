@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background: linear-gradient(45deg, #ffe6e6, #fff0f5);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .background-particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .rose-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .center {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(#ff1493, #d64161);
+            border-radius: 50%;
+            z-index: 10;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .center:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .petal {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(#ff69b4, #ff1493);
+            border-radius: 100% 0 100% 0;
+            transform-origin: bottom right;
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: -2px 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .petal:hover {
+            filter: brightness(1.1);
+        }
+
+        .petal:nth-child(1) { transform: rotate(0deg) translateX(-100px) rotate(0deg); }
+        .petal:nth-child(2) { transform: rotate(72deg) translateX(-100px) rotate(-72deg); }
+        .petal:nth-child(3) { transform: rotate(144deg) translateX(-100px) rotate(-144deg); }
+        .petal:nth-child(4) { transform: rotate(216deg) translateX(-100px) rotate(-216deg); }
+        .petal:nth-child(5) { transform: rotate(288deg) translateX(-100px) rotate(-288deg); }
+
+        .petal.open:nth-child(1) { transform: rotate(0deg) translateX(-300px) rotate(60deg); }
+        .petal.open:nth-child(2) { transform: rotate(72deg) translateX(-300px) rotate(0deg); }
+        .petal.open:nth-child(3) { transform: rotate(144deg) translateX(-300px) rotate(-60deg); }
+        .petal.open:nth-child(4) { transform: rotate(216deg) translateX(-300px) rotate(-120deg); }
+        .petal.open:nth-child(5) { transform: rotate(288deg) translateX(-300px) rotate(-180deg); }
+
+        .question-card {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 250px;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.5s ease;
+            pointer-events: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .question-card.visible {
+            opacity: 1;
+            pointer-events: all;
+            animation: floatIn 0.5s ease;
+        }
+
+        @keyframes floatIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .question-card input {
+            width: 90%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: 2px solid #ff1493;
+            border-radius: 5px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .question-card input:focus {
+            box-shadow: 0 0 10px rgba(255,20,147,0.3);
+        }
+
+        .question-card button {
+            background: #ff1493;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .question-card button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255,20,147,0.3);
+        }
+
+        h1 {
+            position: absolute;
+            top: 2rem;
+            color: #d64161;
+            text-align: center;
+            width: 100%;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: fadeIn 1s ease;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 2;
+        }
+
+        .control-btn {
+            background: #d64161;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.05);
+            background: #ff1493;
+        }
+
+        .progress {
+            position: absolute;
+            bottom: 5rem;
+            color: #d64161;
+            font-size: 1.2rem;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .music-control {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 2rem;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-particles"></div>
+    <button class="music-control" onclick="toggleMusic()">🎵</button>
+    <h1>Unfold My Love 🌹</h1>
+    
+    <div class="rose-container">
+        <div class="center" onclick="toggleAllPetals()"></div>
+        <div class="petal" onclick="openPetal(0)"></div>
+        <div class="petal" onclick="openPetal(1)"></div>
+        <div class="petal" onclick="openPetal(2)"></div>
+        <div class="petal" onclick="openPetal(3)"></div>
+        <div class="petal" onclick="openPetal(4)"></div>
+        
+        <div id="questionCard" class="question-card">
+            <p id="questionText"></p>
+            <input type="text" id="answerInput" placeholder="Your answer...">
+            <button onclick="checkAnswer()">Submit</button>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button class="control-btn" onclick="rewindAll()">Wind All Petals</button>
+        <button class="control-btn" onclick="unfoldAll()">Unfold All Petals</button>
+    </div>
+    
+    <div class="progress">Petals Opened: <span id="progress">0</span>/5</div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b0a2fe0f.mp3?filename=ambient-piano-calm-ambient-109102.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const questions = [
+            {
+                question: "What was the song playing when we first met?",
+                answer: "song"
+            },
+            {
+                question: "Where did we share our first kiss?",
+                answer: "place"
+            },
+            {
+                question: "What's the date of our anniversary?",
+                answer: "date"
+            },
+            {
+                question: "What's my favorite thing about you?",
+                answer: "thing"
+            },
+            {
+                question: "What did I say to you on our first date?",
+                answer: "words"
+            }
+        ];
+
+        let currentPetal = -1;
+        let correctAnswers = 0;
+        let answeredPetals = new Set();
+        let isUnfolded = false;
+
+        function createParticle(x, y, color) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            particle.style.background = color;
+            particle.style.width = '10px';
+            particle.style.height = '10px';
+            particle.style.borderRadius = '50%';
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 3000);
+        }
+
+        function celebrateCorrectAnswer(x, y) {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createParticle(
+                        x + Math.random() * 100 - 50,
+                        y + Math.random() * 100 - 50,
+                        `hsl(${Math.random() * 60 + 300}, 100%, 50%)`
+                    );
+                }, i * 50);
+            }
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('backgroundMusic');
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+        function openPetal(index) {
+            if (answeredPetals.has(index)) return;
+            
+            const petals = document.querySelectorAll('.petal');
+            currentPetal = index;
+            
+            petals[index].classList.add('open');
+            
+            const card = document.getElementById('questionCard');
+            card.classList.add('visible');
+            card.style.transform = `rotate(${72 * index}deg) translateX(-300px) rotate(-${72 * index}deg)`;
+            
+            document.getElementById('questionText').textContent = questions[index].question;
+            document.getElementById('answerInput').value = '';
+        }
+
+        function toggleAllPetals() {
+            isUnfolded = !isUnfolded;
+            const petals = document.querySelectorAll('.petal');
+            petals.forEach(petal => {
+                if (isUnfolded) {
+                    petal.classList.add('open');
+                } else {
+                    petal.classList.remove('open');
+                }
+            });
+        }
+
+        function rewindAll() {
+            const petals = document.querySelectorAll('.petal');
+            petals.forEach(petal => petal.classList.remove('open'));
+            document.getElementById('questionCard').classList.remove('visible');
+        }
+
+        function unfoldAll() {
+            const petals = document.querySelectorAll('.petal');
+            petals.forEach(petal => petal.classList.add('open'));
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('answerInput');
+            const card = document.getElementById('questionCard');
+            
+            if (input.value.toLowerCase() === questions[currentPetal].answer.toLowerCase()) {
+                const rect = card.getBoundingClientRect();
+                celebrateCorrectAnswer(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                
+                answeredPetals.add(currentPetal);
+                correctAnswers++;
+                document.getElementById('progress').textContent = correctAnswers;
+                card.classList.remove('visible');
+                
+                if (correctAnswers === 5) {
+                    setTimeout(() => {
+                        // Replace with actual portfolio URL
+                        window.location.href = 'index.html';
+                    }, 2000);
+                }
+            } else {
+                input.value = '';
+                input.placeholder = 'Try again...';
+                input.classList.add('shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+            }
+        }
+
+        document.getElementById('answerInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Initialize background music
+        document.addEventListener('click', function() {
+            const music = document.getElementById('backgroundMusic');
+            music.volume = 0.3;
+            music.play();
+        }, { once: true });
+    </script>
+</body>
+</html>
